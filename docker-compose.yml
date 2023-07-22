@@ -30,3 +30,24 @@ services:
     - 25676:25676
     - 5672:5672 
     - 15672:15672
+
+    
+  api-sales:
+    image: lcsmachaado/api-sales:latest
+    container_name: api-sales
+    restart: always
+    environment:
+    - PORT:8082
+    ports:
+    - 8082:8082
+
+  api-auth:
+    image: lcsmachaado/api-auth:latest
+    container_name: api-sales
+    restart: always
+    depends_on:
+      - auth-db
+    environment:
+    - PORT:8080
+    ports:
+    - 8080:8080
