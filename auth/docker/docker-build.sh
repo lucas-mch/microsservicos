@@ -1,0 +1,1 @@
+docker image build -t lcsmachaado/api-auth:latest .
