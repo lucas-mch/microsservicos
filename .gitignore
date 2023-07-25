@@ -40,4 +40,4 @@ out/
 node_modules
 
 ### yarn ###
-yarn.lock
+*/yarn.lock
