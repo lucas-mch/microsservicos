@@ -1,0 +1,1 @@
+docker run --name api-product -p 8081:8081 -d lcsmachaado/api-product:latest
