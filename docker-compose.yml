@@ -1,9 +1,11 @@
 version: '3'
 services:
-
+  
   auth-db:
     image: postgres
     container_name: auth-db
+    networks:
+      - sales-network
     restart: always
     environment:
     - POSTGRES_DB=auth-db
@@ -16,6 +18,8 @@ services:
     image: postgres
     container_name: product-db
     restart: always
+    networks:
+      - sales-network
     environment:
     - POSTGRES_DB=product-db
     - POSTGRES_USER=admin
@@ -26,6 +30,8 @@ services:
   sales-rabbit:
     image: rabbitmq:management-alpine
     container_name: sales-rabbit
+    networks:
+      - sales-network
     ports:
     - 25676:25676
     - 5672:5672 
@@ -36,6 +42,8 @@ services:
     image: lcsmachaado/api-sales:latest
     container_name: api-sales
     restart: always
+    networks:
+      - sales-network
     environment:
     - PORT:8082
     ports:
@@ -43,7 +51,9 @@ services:
 
   api-auth:
     image: lcsmachaado/api-auth:latest
-    container_name: api-sales
+    container_name: api-auth
+    networks:
+      - sales-network
     restart: always
     depends_on:
       - auth-db
@@ -51,3 +61,18 @@ services:
     - PORT:8080
     ports:
     - 8080:8080
+
+  api-product:
+    image: lcsmachaado/api-product:latest
+    networks:
+      - sales-network
+    container_name: api-product
+    restart: always
+    depends_on:
+      - product-db
+    ports:
+    - 8081:8081
+
+networks:
+  sales-network:
+    driver: bridge
