@@ -5,9 +5,10 @@ const isEmpty = (entity) => {
 }
 
 const defaultErrorResponse = (err) => {
+    console.log(err);
     return {
         status: err.status ? err.status : httpStatus.INTERNAL_SERVER_ERROR,
-        message: err.msg,
+        message: err.msg ? err.msg : 'Internal ' + err.toString(),
     }
 }
 

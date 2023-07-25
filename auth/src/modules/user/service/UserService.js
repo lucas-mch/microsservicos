@@ -31,14 +31,14 @@ class UserService {
 
     }
 
-    async getAccessToken() {
+    async getAccessToken(req) {
         try {
             const { email, password } = req.body;
             this.validateAccessTokenDate(email, password);
             let user = await userRepository.findByEmail(email);
             this.validateUserNotFound(user);
-            await this.validadePassword(password, user.password);
-            let authUser = { id: user.id, name: user.name, email: user.email };
+            await this.validatePassword(password, user[0].dataValues.password);
+            let authUser = { id: user[0].dataValues.id, name: user[0].dataValues.name, email: user[0].dataValues.email };
             const accessToken = jwt.sign({ authUser }, secrets.API_SECRET, { expiresIn: '1d' })
             return {
                 status: httpStatus.SUCCESS,
@@ -65,6 +65,7 @@ class UserService {
     }
 
     async validatePassword(password, hashPassword) {
+        console.log('password: ',password ,', hashPassword:', hashPassword)
         if (!await bcrypt.compare(password, hashPassword)) {
             throw new UserException(httpStatus.UNAUTHORIZED, 'Senha inválida.');
         }

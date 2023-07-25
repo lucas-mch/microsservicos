@@ -10,9 +10,9 @@ const PORT = env.PORT || 8080;
 
 await db.createInitialData();
 
-app.use(userRoutes);
-
 app.use(express.json());
+
+app.use(userRoutes);
 
 app.get('/api/status', (req, res) => {
    return res.status(200).json({
