@@ -8,4 +8,4 @@ RUN mvn package -Dspring.profiles.active=build
 FROM amazoncorretto:17
 COPY --from=build /usr/app/target/api-product-0.0.1-SNAPSHOT.jar /app/runner.jar
 EXPOSE 8081
-ENTRYPOINT java -jar /app/runner.jar
+ENTRYPOINT ["java","-Dspring.profiles.active=build","-jar","/app/runner.jar"]
