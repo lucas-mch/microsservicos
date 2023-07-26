@@ -1,7 +1,7 @@
 import * as httpStatus from './httpStatus.js';
 
 const isEmpty = (entity) => {
-    return entity === null || entity.length === 0 || entity === undefined;
+    return entity === null || entity === undefined;
 }
 
 const defaultErrorResponse = (err) => {

@@ -8,14 +8,18 @@ import * as secrets from '../../../config/constants/secrets.js';
 
 import { isEmpty, defaultErrorResponse } from '../../../config/constants/helper.js'
 
+const Bearer = 'Bearer ';
+
 class UserService {
 
     async findByEmail(req) {
         try {
             const { email } = req.params;
+            const { authUser } = req;
             this.validateRequestData(email);
             let user = await userRepository.findByEmail(email);
             this.validateUserNotFound(user);
+            this.validateAuthenticatedUser(user[0].dataValues, authUser);
             return {
                 status: httpStatus.SUCCESS,
                 user: {
@@ -42,7 +46,7 @@ class UserService {
             const accessToken = jwt.sign({ authUser }, secrets.API_SECRET, { expiresIn: '1d' })
             return {
                 status: httpStatus.SUCCESS,
-                accessToken: accessToken
+                accessToken: Bearer + accessToken
             }
         }
         catch (err) {
@@ -68,6 +72,13 @@ class UserService {
         console.log('password: ',password ,', hashPassword:', hashPassword)
         if (!await bcrypt.compare(password, hashPassword)) {
             throw new UserException(httpStatus.UNAUTHORIZED, 'Senha inválida.');
+        }
+    }
+
+    validateAuthenticatedUser(user , authUser) {
+        console.log(user, authUser);
+        if(isEmpty(authUser) || user.id !== authUser.id) {
+            throw new UserException(httpStatus.FORBIDDEN, 'You cannot see this user data.')
         }
     }
 
