@@ -12,8 +12,11 @@ import lombok.NoArgsConstructor;
 public class Product {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "products_seq")
+    @SequenceGenerator(name = "products_seq", sequenceName = "product_seq", allocationSize = 1, initialValue = 1)
     private Long id;
+
+    private String name;
 
     @ManyToOne
     @JoinColumn(name = "i_fornecedores")
@@ -22,5 +25,8 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "i_categorias")
     private Category category;
+
+    @Column(name = "quantity")
+    private Integer quantity;
 
 }
